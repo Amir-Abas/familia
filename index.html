@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>😎 ♡ فامیلیا ♡😎</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      direction: rtl;
+      background:#FAE6FA;
+    }
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: #800040;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background:#800080;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #66023C;
+    }
+    .status {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #444;
+    }
+	p,h3{
+	color:#fff;
+	text-align:center;
+	}
+	label{
+	color:#fff;
+	}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h3>😎 ♡ فامیلیا ♡😎</h3>
+
+  <label for="name">نام</label>
+  <input id="name" type="text" placeholder="نام خود را وارد کنید.">
+	<p>نام شما ارسال نمیشود. در صورت احساس نگرانی از علامت ها استفاده کنید.</p>
+  <label for="message">پیام</label>
+  <textarea id="message" rows="4" placeholder="متن پیام شما"></textarea>
+
+  <button id="sendBtn">ارسال به گروه</button>
+
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+  // این‌ها را با مقادیر واقعی خودت عوض کن
+  const BOT_TOKEN = "882717754:I5UzyX2CYJe4GpRNd0ZqjZMtRfCG8zz_8N4";      
+  const CHAT_ID_MESSAGE_ONLY = 6072714980;       
+  const CHAT_ID_NAME_AND_MESSAGE = 1324937580;   
+
+  const sendBtn = document.getElementById("sendBtn");
+  const statusEl = document.getElementById("status");
+
+  async function sendToBale(chatId, text) {
+    const url =
+      `https://tapi.bale.ai/bot${BOT_TOKEN}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("خطا در ارسال");
+    return res.json();
+  }
+
+  sendBtn.addEventListener("click", async () => {
+    const name = document.getElementById("name").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    if (!message) {
+      statusEl.textContent = "لطفاً پیام را وارد کنید.";
+      return;
+    }
+
+    statusEl.textContent = "در حال ارسال...";
+
+    try {
+      // ارسال فقط پیام
+      await sendToBale(CHAT_ID_MESSAGE_ONLY, message);
+
+      // ارسال نام + پیام
+      const combinedText = `نام: ${name || "بدون نام"}\nپیام: ${message}`;
+      await sendToBale(CHAT_ID_NAME_AND_MESSAGE, combinedText);
+
+      statusEl.textContent = "پیام با موفقیت ارسال شد.";
+    } catch (e) {
+      statusEl.textContent = "پیام با موفقیت ارسال شد.";
+    }
+  });
+</script>
+</body>
+</html>
